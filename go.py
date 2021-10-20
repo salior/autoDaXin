@@ -5,15 +5,15 @@ import time
 import random
 
 # 匹配第一层界面
-tmep_ui1 = cv2.imread('ui1.jpg', 0)
+temp_ui1 = cv2.imread('ui1.png', 0)
 # 匹配新三板入口
-tmep_entry1 = cv2.imread('entry1.jpg', 0)
+temp_entry1 = cv2.imread('entry1.png', 0)
 # 匹配新三板交易界面
-tmep_ui2 = cv2.imread('ui2.jpg', 0)
+temp_ui2 = cv2.imread('entry2.png', 0)
 # 匹配申购入口
-tmep_entry2 = cv2.imread('entry2.jpg', 0)
+temp_entry2 = cv2.imread('entry2.png', 0)
 # 匹配申购交易界面
-tmep_ui3 = cv2.imread('ui3.jpg', 0)
+temp_ui3 = cv2.imread('ui3.png', 0)
 
 #主要流程：
 #1、找到屏幕的标记图，判断当前所在的界面
@@ -24,15 +24,19 @@ def get_screenshot(id):
     os.system('adb pull /sdcard/%s.png .' % str(id))
 	
 def check_current_ui(img_rgb):
-    res_end = cv2.matchTemplate(img_rgb, tmep_ui1, cv2.TM_CCOEFF_NORMED)
+    res_end = cv2.matchTemplate(img_rgb, temp_entry1, cv2.TM_CCOEFF_NORMED)
+    if cv2.minMaxLoc(res_end)[1] > 0.95:
+        print('现在可以点击新三板入口了')
+        return 4
+    res_end = cv2.matchTemplate(img_rgb, temp_ui1, cv2.TM_CCOEFF_NORMED)
     if cv2.minMaxLoc(res_end)[1] > 0.95:
         print('now is at 1st ui')
         return 1
-    res_end = cv2.matchTemplate(img_rgb, tmep_ui2, cv2.TM_CCOEFF_NORMED)
+    res_end = cv2.matchTemplate(img_rgb, temp_ui2, cv2.TM_CCOEFF_NORMED)
     if cv2.minMaxLoc(res_end)[1] > 0.95:
         print('now is at 2nd ui')
         return 2
-    res_end = cv2.matchTemplate(img_rgb, tmep_ui3, cv2.TM_CCOEFF_NORMED)
+    res_end = cv2.matchTemplate(img_rgb, temp_ui3, cv2.TM_CCOEFF_NORMED)
     if cv2.minMaxLoc(res_end)[1] > 0.95:
         print('now is at 3rd ui')
         return 3
@@ -55,9 +59,11 @@ def click(x,y):
 def clickUi(img_rgb,ui_rgb,xdis,ydis):
     res = cv2.matchTemplate(img_rgb, ui_rgb, cv2.TM_CCOEFF_NORMED)
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+    print(min_loc)
+    print(max_loc)
     if max_val > 0.95:
-        click(max_loc1[0]+xdis,max_loc1[1] + ydis)
-    else
+        click(max_loc[0]+xdis,max_loc[1] + ydis)
+    else:
         print('not find entry ,something wrong')
         
 # 循环直到申购成功
@@ -71,17 +77,18 @@ for i in range(100):
         break
     if now_ui == 1:
         print('try enter 2nd ui')
-        input_swipe(1,-100);
-        #点击进入新三板界面
-        clickUi(img_rgb,tmep_entry1,20,20)
+        input_swipe(1,-500);
     elif now_ui == 2:
         print('try enter 3nd ui')
-        #点击进入新三板界面
-        clickUi(img_rgb,tmep_entry2,20,20)
+        #点击进入申购界面
+        clickUi(img_rgb,temp_entry2,20,20)
     elif now_ui == 3:
         print('Subscribe stocks')
         #点击进入新三板界面
-        #clickUi(img_rgb,tmep_entry2,20,20)
+        #clickUi(img_rgb,temp_entry2,20,20)
         break
-    time.sleep(0.3)
+    elif now_ui == 4:
+        #点击进入新三板界面
+        clickUi(img_rgb,temp_entry1,20,20)
+        
         
