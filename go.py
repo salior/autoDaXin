@@ -29,7 +29,7 @@ def get_screenshot(id):
 #    os.system('adb pull /sdcard/%s.png .' % str(id))
     os.system('adb exec-out screencap -p > %s.png' % str(id))
     t2 = time.perf_counter()
-    print('截屏花费时间:%f ms'%((t2-t1)*1000))
+    print('截屏花费时间:%0.02f ms'%((t2-t1)*1000))
     
 def check_current_ui(img_rgb):
     res_end = cv2.matchTemplate(img_rgb, temp_entry1, cv2.TM_CCOEFF_NORMED)
@@ -59,12 +59,16 @@ def input_swipe(xdis,ydis):
 
 #手指点击
 def click(x,y):
+    t1 = time.perf_counter()
     cmd = ('adb shell input tap %i %i') % (x, y)
     print(cmd)
     os.system(cmd)
+    t2 = time.perf_counter()
+    print('点击命令花费时间:%0.02f ms'%((t2-t1)*1000))
 
 #手指点击某个图案，xdis,ydis为偏移距离
 def clickUi(img_rgb,ui_rgb,xdis,ydis):
+    t1 = time.perf_counter()
     res = cv2.matchTemplate(img_rgb, ui_rgb, cv2.TM_CCOEFF_NORMED)
     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
@@ -73,7 +77,9 @@ def clickUi(img_rgb,ui_rgb,xdis,ydis):
         click(max_loc[0]+xdis,max_loc[1] + ydis)
     else:
         print('没找到入口，有问题')
-
+    t2 = time.perf_counter()
+    print('点击UI花费时间:%0.02f ms'%((t2-t1)*1000))
+    
 #手指点击所有图案，xdis,ydis为偏移距离
 def clickAllUi(img_rgb,ui_rgb,xdis,ydis):
     res = cv2.matchTemplate(img_rgb, ui_rgb, cv2.TM_CCOEFF_NORMED)
@@ -89,8 +95,8 @@ def clickAllUi(img_rgb,ui_rgb,xdis,ydis):
             click(max_loc[0]+xdis,max_loc[1] + ydis)
 
 isRealRun = False
-def waitTradeTime():
-    while isRealRun:#真实运行需要等到11:59:59才开始
+#def waitTradeTime():
+#    while isRealRun:#真实运行需要等到11:59:59才开始
         
 
 start = time.perf_counter()
@@ -122,6 +128,6 @@ for i in range(100):
         clickUi(img_rgb,temp_entry1,20,20)
         
 nowt = time.perf_counter()
-print('花费时间%f ms'%((nowt-start)*1000))
+print('花费时间%0.02f ms'%((nowt-start)*1000))
         
         
