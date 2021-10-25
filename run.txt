@@ -1,0 +1,28 @@
+(base) E:\python\autoDaXin>python go.py
+截屏花费时间:767.29 ms
+现在在第二层界面
+try enter 3nd ui
+(30, 1636)
+adb shell input tap 50 1656
+点击命令花费时间:805.77 ms
+点击UI花费时间:980.29 ms
+截屏花费时间:564.07 ms
+现在在第三层界面
+Subscribe stocks
+点击了(1219,1134)
+adb shell input tap 1219 1134
+点击命令花费时间:806.07 ms
+点击了(1219,2144)
+adb shell input tap 1219 2144
+点击命令花费时间:820.97 ms
+截屏花费时间:584.37 ms
+(917, 2969)
+adb shell input tap 937 2989
+点击命令花费时间:783.89 ms
+点击UI花费时间:947.05 ms
+截屏花费时间:1296.80 ms
+(810, 2002)
+adb shell input tap 830 2022
+点击命令花费时间:786.40 ms
+点击UI花费时间:946.65 ms
+花费时间9403.49 ms

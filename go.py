@@ -15,9 +15,11 @@ temp_entry2 = cv2.imread('entry2.png', 0)
 # 匹配申购交易界面
 temp_ui3 = cv2.imread('ui3.png', 0)
 # 匹配申购加按键 --- 
-temp_plus = cv2.imread('ui3.png', 0) 
+temp_plus = cv2.imread('ui4.png', 0) 
 # 匹配申购按键 ---
-temp_ok = cv2.imread('ui3.png', 0)
+temp_sub = cv2.imread('ui7.png', 0)
+# 匹配确定键 ---
+temp_ok = cv2.imread('ui8.png', 0)
 
 #主要流程：
 #1、找到屏幕的标记图，判断当前所在的界面
@@ -87,7 +89,7 @@ def clickAllUi(img_rgb,ui_rgb,xdis,ydis):
     max_val = 1
     while max_val > 0.95:
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
-
+        h, w = ui_rgb.shape[:2]
         if max_val > 0.95:
             res[max_loc[1]-h//2:max_loc[1]+h//2+1, max_loc[0]-w//2:max_loc[0]+w//2+1] = 0   
             #image = cv2.rectangle(image,(max_loc[0],max_loc[1]), (max_loc[0]+w+1, max_loc[1]+h+1), (0,255,0) )
@@ -119,9 +121,15 @@ for i in range(100):
     elif now_ui == 3:
         print('Subscribe stocks')
         #点击加按键
-        #clickUi(img_rgb,temp_entry2,20,20)
+        clickAllUi(img_rgb,temp_plus,490,20)
+        get_screenshot(0)
+        img_rgb = cv2.imread('%s.png' % 0, 0)
         #点击申购
-        #clickUi(img_rgb,temp_entry2,20,20)
+        clickUi(img_rgb,temp_sub,20,20)
+        get_screenshot(0)
+        img_rgb = cv2.imread('%s.png' % 0, 0)
+        #点击确认
+        clickUi(img_rgb,temp_ok,20,20)
         break
     elif now_ui == 4:
         #点击进入新三板界面
