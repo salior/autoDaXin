@@ -3,6 +3,8 @@ import cv2
 import numpy as np
 import time
 import random
+from datetime import datetime
+from datetime import timedelta
 
 # 匹配第一层界面
 temp_ui1 = cv2.imread('ui1.png', 0)
@@ -94,13 +96,25 @@ def clickAllUi(img_rgb,ui_rgb,xdis,ydis):
             res[max_loc[1]-h//2:max_loc[1]+h//2+1, max_loc[0]-w//2:max_loc[0]+w//2+1] = 0   
             #image = cv2.rectangle(image,(max_loc[0],max_loc[1]), (max_loc[0]+w+1, max_loc[1]+h+1), (0,255,0) )
             print('点击了(%d,%d)'%(max_loc[0]+xdis,max_loc[1] + ydis))
-            click(max_loc[0]+xdis,max_loc[1] + ydis)
-
-isRealRun = False
-#def waitTradeTime():
-#    while isRealRun:#真实运行需要等到11:59:59才开始
+            click(max_loc[0]+xdis,max_loc[1] + ydis).
+            
+isRealRun = True
+def getNextDayZeroTime():
+    now = datetime.now()
+    if isRealRun:
+        return datetime(now.year, now.month, now.day) + timedelta(days=1)
+    return datetime(now.year, now.month, now.day) + timedelta(seconds=3)
+    
+def waitTradeTime():
+    while True:#run time is 11:59:59
+        now = datetime.now()
+        diff = getNextDayZeroTime().timestamp() - now.timestamp()
+        if diff < 0.4:
+            print ('时间到，开始行动')
+            break
+        print ('%s,倒计时%f秒'%(now.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3],diff),end='\r')
         
-
+waitTradeTime()
 start = time.perf_counter()
 # 循环直到申购成功
 for i in range(100):
